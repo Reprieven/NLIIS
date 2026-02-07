@@ -2,7 +2,7 @@ from pydantic import BaseModel, field_validator, Field
 from datetime import datetime
 
 
-class STextAdd(BaseModel):
+class STextBase(BaseModel):
     name: str
     text: str
 
@@ -14,5 +14,13 @@ class STextAdd(BaseModel):
         return v
 
 
-class STextUpdate(STextAdd):
+class STextAdd(STextBase):
+    pass
+
+
+class STextUpdate(STextBase):
     date: datetime = datetime.now()
+
+
+class STextResponse(STextBase):
+    date: datetime

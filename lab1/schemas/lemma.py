@@ -1,15 +1,21 @@
 from pydantic import BaseModel, Field
 
 
-class SLemmaAdd(BaseModel):
+class SLemmaBase(BaseModel):
+    lemma: str
+    morph: str
+    role: str
+
+
+class SLemmaAdd(SLemmaBase):
     text_id: int = Field(..., ge=1)
     word: str
-    lemma: str
-    morph: str
-    role: str
 
 
-class SLemmaUpdate(BaseModel):
-    lemma: str
-    morph: str
-    role: str
+class SLemmaUpdate(SLemmaBase):
+    pass
+
+
+class SLemmaResponse(SLemmaBase):
+    id: int
+    word: str

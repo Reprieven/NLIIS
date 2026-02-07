@@ -1,7 +1,7 @@
 from database import SessionDep
 from models.text import Text
 from models.lemma import Lemma
-from sqlalchemy import select, delete, update
+from sqlalchemy import select, delete
 from schemas.lemma import SLemmaAdd, SLemmaUpdate
 from schemas.text import STextAdd, STextUpdate
 
