@@ -4,7 +4,6 @@ from contextlib import asynccontextmanager
 from database import Base, engine
 
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
@@ -16,4 +15,3 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(text.router)
 app.include_router(lemma.router)
-

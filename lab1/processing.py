@@ -37,9 +37,10 @@ class Processer:
 
         return result_dict
 
+
 class DocReader:
     @classmethod
-    async def read_doc(cls,file: IO[bytes]):
+    async def read_doc(cls, file: IO[bytes]):
         doc_file = Document(file)
-        merged_text = ' '.join([word.text for word in doc_file.paragraphs])
+        merged_text = " ".join([word.text for word in doc_file.paragraphs])
         return merged_text
