@@ -40,7 +40,9 @@ class Processer:
 
 class DocReader:
     @classmethod
-    async def read_doc(cls, file: IO[bytes]):
-        doc_file = Document(file)
-        merged_text = " ".join([word.text for word in doc_file.paragraphs])
+    async def read_doc(cls,filename: str, file: IO[bytes]):
+        merged_text = ''
+        if filename.endswith('.docx'):
+            doc_file = Document(file)
+            merged_text = ' '.join([word.text for word in doc_file.paragraphs])
         return merged_text

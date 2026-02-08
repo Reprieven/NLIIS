@@ -9,7 +9,7 @@ from schemas.text import STextAdd, STextUpdate
 class TextRepository:
 
     @classmethod
-    async def get_all(session: SessionDep):
+    async def get_all(cls, session: SessionDep):
         query = select(Text)
         query_result = await session.execute(query)
         texts = query_result.scalars().all()
