@@ -1,7 +1,7 @@
 from database import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
-
+from typing import List
 
 class Lemma(Base):
     __tablename__ = "lemmas"

@@ -33,9 +33,12 @@ class TextRepository:
 
     @classmethod
     async def delete_one(cls, id: int, session: SessionDep):
-        stmt = delete(Text).where(Text.id == id)
-        await session.execute(stmt)
-        await session.commit()
+        text = await session.get(Text, id)
+        if text:
+            await session.delete(text)
+            await session.commit()
+        else:
+            raise ValueError(f"Text with id {id} not found")
 
     @classmethod
     async def update_text(cls, id: int, data: STextUpdate, session: SessionDep):
@@ -77,9 +80,12 @@ class LemmaRepository:
 
     @classmethod
     async def delete_one(cls, id: int, session: SessionDep):
-        stmt = delete(Lemma).where(Lemma.id == id)
-        await session.execute(stmt)
-        await session.commit()
+        lemma = await session.get(Lemma, id)
+        if lemma:
+            await session.delete(lemma)
+            await session.commit()
+        else:
+            raise ValueError(f"Text with id {id} not found")
 
     @classmethod
     async def delete_all(cls, text_id: int, session: SessionDep):
