@@ -23,4 +23,5 @@ class STextUpdate(STextBase):
 
 
 class STextResponse(STextBase):
+    id: int
     date: datetime
