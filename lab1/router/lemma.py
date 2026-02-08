@@ -19,6 +19,28 @@ async def get_all(
     lemmas = await LemmaRepository.get_all(text_id, session)
     return lemmas
 
+@router.delete('/delete/{id}', response_model=SLemmaResponse|None, status_code=status.HTTP_200_OK)
+async def delete(id: int, session: SessionDep):
+    await LemmaRepository.delete_one(id,session)
+    return None
+
+@router.put('/update/{id}', response_model=SLemmaResponse, status_code=status.HTTP_202_ACCEPTED)
+async def update(id: int, new_lemma: SLemmaUpdate, session: SessionDep):
+    lemma = await LemmaRepository.update_one(id, new_lemma, session)
+    if not lemma:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Lemma with id {id} not found"
+        )
+    return lemma
+
+@router.get('/{id}', response_model=SLemmaResponse, status_code=status.HTTP_200_OK)
+async def get_one(id:int, session: SessionDep):
+    lemma = await LemmaRepository.get_one(id,session)
+    if not lemma:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Lemma with id {id} not found"
+        )
+    return lemma
 
 @router.post("/", response_model=SLemmaAdd, status_code=status.HTTP_201_CREATED)
 async def add_one(
