@@ -3,6 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 from typing import List
 
+
 class Lemma(Base):
     __tablename__ = "lemmas"
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
