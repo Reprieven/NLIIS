@@ -19,7 +19,9 @@ async def get_all(session: SessionDep, text_id: TextIdDep, request: Request):
         return []
     current_text = await TextRepository.get_one(text_id, session)
     lemmas = await LemmaRepository.get_all(text_id, session)
-    return templates.TemplateResponse('lemma_index.html',{'request': request, 'lemmas':lemmas, 'text': current_text})
+    return templates.TemplateResponse(
+        "lemma_index.html", {"request": request, "lemmas": lemmas, "text": current_text}
+    )
 
 
 @router.post(
@@ -27,24 +29,22 @@ async def get_all(session: SessionDep, text_id: TextIdDep, request: Request):
 )
 async def delete(id: int, session: SessionDep):
     await LemmaRepository.delete_one(id, session)
-    return RedirectResponse('/lemma/', status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse("/lemma/", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.post(
-    "/update/{id}", response_class=RedirectResponse,
-    status_code=status.HTTP_303_SEE_OTHER
+    "/update/{id}",
+    response_class=RedirectResponse,
+    status_code=status.HTTP_303_SEE_OTHER,
 )
 async def update(
-    id: int, 
+    id: int,
     session: SessionDep,
     lemma: str = Form(...),
     morph: str = Form(...),
-    role: str = Form(...)
+    role: str = Form(...),
 ):
-    new_lemma = SLemmaUpdate(
-        lemma=lemma,
-        morph=morph,
-        role=role)
+    new_lemma = SLemmaUpdate(lemma=lemma, morph=morph, role=role)
     print(new_lemma.dict())
     lemma = await LemmaRepository.update_one(id, new_lemma, session)
     if not lemma:
@@ -52,7 +52,7 @@ async def update(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Lemma with id {id} not found",
         )
-    return RedirectResponse('/lemma/', status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse("/lemma/", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.get("/{id}", response_model=SLemmaResponse, status_code=status.HTTP_200_OK)
@@ -63,7 +63,9 @@ async def get_one(id: int, session: SessionDep, request: Request):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Lemma with id {id} not found",
         )
-    return templates.TemplateResponse('lemma_edit.html',{'request':request,'lemma':lemma})
+    return templates.TemplateResponse(
+        "lemma_edit.html", {"request": request, "lemma": lemma}
+    )
 
 
 @router.post("/add", response_model=SLemmaAdd, status_code=status.HTTP_201_CREATED)
@@ -73,7 +75,7 @@ async def add_one(
     word: str = Form(...),
     lemma: str = Form(...),
     morph: str = Form(...),
-    role: str = Form(...)
+    role: str = Form(...),
 ):
     if not text_id:
         raise HTTPException(
@@ -90,4 +92,4 @@ async def add_one(
         ),
         session,
     )
-    return RedirectResponse('/lemma/', status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse("/lemma/", status_code=status.HTTP_303_SEE_OTHER)

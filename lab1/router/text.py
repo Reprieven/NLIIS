@@ -8,7 +8,6 @@ from typing import List
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 
-
 router = APIRouter(prefix="/text", tags=["Тексты"])
 
 templates = Jinja2Templates(directory="templates")
@@ -57,4 +56,6 @@ async def get_text(id: int, session: SessionDep, response: Response, request: Re
 
     response.set_cookie(key="current_text_id", value=str(text.id))
 
-    return templates.TemplateResponse('text_detail.html', {"request": request, "text": text})
+    return templates.TemplateResponse(
+        "text_detail.html", {"request": request, "text": text}
+    )
