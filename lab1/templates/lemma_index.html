@@ -21,12 +21,30 @@
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <label for="morph"><strong>Введите морфологический тег:</strong></label>
                 <input type="text" id="morph" name="morph" 
-                       placeholder="например: NOUN, VERB, ADJ" 
                        style="padding: 8px; width: 300px; border: 1px solid #ccc;" 
                        value="{{ request.query_params.get('morph', '') }}"
                        required>
                 <button type="submit" style="padding: 8px 20px; background-color: #2196F3; color: white; border: none; cursor: pointer;">
                     Применить фильтр
+                </button>
+                <a href="/text/{{ text.id }}/lemma/" style="padding: 8px 20px; background-color: #666; color: white; text-decoration: none;">
+                    Сбросить
+                </a>
+            </div>
+        </form>
+    </div>
+
+        <div style="margin-bottom: 30px; margin-top: 20px; padding: 20px; border: 1px solid #ccc; background-color: #147f92c0;">
+        <h2>Поиск по слову</h2>
+        <form action="/text/{{ text.id }}/lemma/search" method="get">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <label for="word"><strong>Введите слово:</strong></label>
+                <input type="text" id="word" name="word" 
+                       style="padding: 8px; width: 300px; border: 1px solid #ccc;" 
+                       value="{{ request.query_params.get('word', '') }}"
+                       required>
+                <button type="submit" style="padding: 8px 20px; background-color: #0b0d9e; color: white; border: none; cursor: pointer;">
+                    Применить поиск
                 </button>
                 <a href="/text/{{ text.id }}/lemma/" style="padding: 8px 20px; background-color: #666; color: white; text-decoration: none;">
                     Сбросить
@@ -53,6 +71,7 @@
         </form>
     </div>
     
+
 
     <div style="margin-top: 20px;">
         <p><strong>Всего лемм:</strong> {{ lemmas|length }}</p>
@@ -96,10 +115,14 @@
         </table>
     {% else %}
         <p style="padding: 20px; background-color: #fff3cd; border: 1px solid #ffeeba;">
+            {% if request.query_params.get('word') %}
+                Нет слов "{{ request.query_params.get('word') }}"
+            {% else %}
             {% if request.query_params.get('morph') %}
                 Нет лемм с морфологией "{{ request.query_params.get('morph') }}"
             {% else %}
                 Для этого текста нет лемм. Добавьте первую лемму с помощью формы выше.
+            {% endif %}
             {% endif %}
         </p>
     {% endif %}
