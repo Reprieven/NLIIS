@@ -13,41 +13,34 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-async def get_all(
-    session: SessionDep, 
-    text_id: int, 
-    request: Request
-):
+async def get_all(session: SessionDep, text_id: int, request: Request):
     current_text = await TextRepository.get_one(text_id, session)
     lemmas = await LemmaRepository.get_all(text_id, session)
     return templates.TemplateResponse(
-        "lemma_index.html", 
+        "lemma_index.html",
         {
-            "request": request, 
-            "lemmas": lemmas, 
+            "request": request,
+            "lemmas": lemmas,
             "text": current_text,
-            "text_id": text_id
-        }
+            "text_id": text_id,
+        },
     )
 
+
 @router.get("/filter", response_class=RedirectResponse)
-async def add_one(
-    session: SessionDep,
-    text_id: int,
-    request: Request,
-    morph: str
-):
-    lemmas = await LemmaRepository.filter(text_id,morph,session)
-    current_text = await TextRepository.get_one(text_id,session)
+async def add_one(session: SessionDep, text_id: int, request: Request, morph: str):
+    lemmas = await LemmaRepository.filter(text_id, morph, session)
+    current_text = await TextRepository.get_one(text_id, session)
     return templates.TemplateResponse(
-        "lemma_index.html", 
+        "lemma_index.html",
         {
-            "request": request, 
-            "lemmas": lemmas, 
+            "request": request,
+            "lemmas": lemmas,
             "text": current_text,
-            "text_id": text_id
-        }
+            "text_id": text_id,
+        },
     )
+
 
 @router.post("/add", response_class=RedirectResponse)
 async def add_one(
@@ -69,27 +62,22 @@ async def add_one(
         session,
     )
     return RedirectResponse(
-        f"/text/{text_id}/lemma/",
-        status_code=status.HTTP_303_SEE_OTHER
+        f"/text/{text_id}/lemma/", status_code=status.HTTP_303_SEE_OTHER
     )
 
+
 @router.post("/delete/{id}", response_class=RedirectResponse)
-async def delete(
-    id: int, 
-    text_id: int, 
-    session: SessionDep
-):
+async def delete(id: int, text_id: int, session: SessionDep):
     await LemmaRepository.delete_one(id, session)
     return RedirectResponse(
-        f"/text/{text_id}/lemma/", 
-        status_code=status.HTTP_303_SEE_OTHER
+        f"/text/{text_id}/lemma/", status_code=status.HTTP_303_SEE_OTHER
     )
 
 
 @router.post("/update/{id}", response_class=RedirectResponse)
 async def update(
     id: int,
-    text_id: int, 
+    text_id: int,
     session: SessionDep,
     lemma: str = Form(...),
     morph: str = Form(...),
@@ -103,18 +91,12 @@ async def update(
             detail=f"Lemma with id {id} not found",
         )
     return RedirectResponse(
-        f"/text/{text_id}/lemma/",
-        status_code=status.HTTP_303_SEE_OTHER
+        f"/text/{text_id}/lemma/", status_code=status.HTTP_303_SEE_OTHER
     )
 
 
 @router.get("/{id}", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
-async def get_one(
-    id: int, 
-    text_id: int, 
-    session: SessionDep, 
-    request: Request
-):
+async def get_one(id: int, text_id: int, session: SessionDep, request: Request):
     lemma = await LemmaRepository.get_one(id, session)
     if not lemma:
         raise HTTPException(
@@ -122,10 +104,5 @@ async def get_one(
             detail=f"Lemma with id {id} not found",
         )
     return templates.TemplateResponse(
-        "lemma_edit.html", 
-        {
-            "request": request, 
-            "lemma": lemma, 
-            "text_id": text_id
-        }
+        "lemma_edit.html", {"request": request, "lemma": lemma, "text_id": text_id}
     )
